@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.text.DecimalFormat
 
@@ -26,6 +29,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        formattedEditText()
+        getFormattedValue()
+
+    }
+
+    private fun getFormattedValue() {
+        findViewById<Button>(R.id.buttonFormat).setOnClickListener {
+            try {
+
+                findViewById<TextView>(R.id.tvFormatValue).text =
+                    getRupeesFormat(findViewById<EditText>(R.id.etValue).text!!.toString(),mTag)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Invalid Value = ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun formattedEditText() {
         val etAmount: EditText = findViewById(R.id.etAmount)
         etAmount.maxWidth = 14
         etAmount.addTextChangedListener(object : TextWatcher {
@@ -95,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                     HUNDRED_CR -> {
                         val format =
                             DecimalFormat("###,##,##,###").format(
-                                etAmount.text.toString().replace(",", "").toInt()
+                                etAmount.text.toString().replace(",", "").toBigInteger()
                             )
                         Log.d(mTag, "hundred crore format = $format")
                         etAmount.setText(format)
@@ -117,6 +138,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
     }
+
 }
